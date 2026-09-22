@@ -1,0 +1,31 @@
+# Lints, typechecks and tests the mirrored source on every push and pull
+# request. This repository publishes nothing: PyPI releases come from the
+# GunSpec monorepo, which pushes each stable release here.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Python ${{ matrix.python }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.9', '3.12']
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.4.3
+        with:
+          python-version: ${{ matrix.python }}
+      - run: uv sync --extra dev
+      - run: uv run ruff check src tests scripts examples
+      - run: uv run ruff format --check src tests scripts examples
+      - run: uv run mypy --strict src
+      - run: uv run pytest -q tests/unit
+      - run: uv build
