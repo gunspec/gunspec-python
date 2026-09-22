@@ -118,3 +118,25 @@ def test_webhook_headers() -> None:
         "X-Webhook-Event",
         "X-Webhook-Delivery",
     ]
+
+
+class TestMalformedInput:
+    """Hostile headers and bodies fail as WebhookSignatureError, never as a
+    stray OverflowError or UnicodeDecodeError a receiver does not catch."""
+
+    @pytest.mark.parametrize("t", ["inf", "-inf", "nan", "1e400", "1.5", "1e3", "-12", "+12", " ", "9" * 400])
+    def test_non_integer_timestamp_is_refused(self, t: str) -> None:
+        with pytest.raises(WebhookSignatureError, match="timestamp"):
+            parse_signature_header(f"t={t},v1=abcd")
+
+    def test_overflowing_timestamp_fails_verification(self) -> None:
+        with pytest.raises(WebhookSignatureError):
+            verify_webhook_signature(BODY, "t=1e400,v1=abcd", TEST_HMAC_KEY, now=_now)
+
+    def test_non_utf8_body_fails_verification(self) -> None:
+        with pytest.raises(WebhookSignatureError, match="UTF-8"):
+            verify_webhook_signature(b"\xff\xfe", _signed(BODY), TEST_HMAC_KEY, now=_now)
+
+    def test_non_utf8_body_fails_construction(self) -> None:
+        with pytest.raises(WebhookSignatureError, match="UTF-8"):
+            construct_webhook_event(b"\xc3\x28", _signed(BODY), TEST_HMAC_KEY, now=_now)

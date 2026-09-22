@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Dict, Optional
-from urllib.parse import quote
 
 from ..types import CreateReplyParams, CreateTicketParams, ListTicketsParams
+from ._path import _seg
 
 if TYPE_CHECKING:
     from .._core._http_client import APIResponse, AsyncHttpClient, PaginatedResponse, SyncHttpClient
@@ -22,10 +22,10 @@ class Support:
         return self._client.get_paginated("/v1/me/support", query=params)
 
     def get(self, ticket_id: str) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/me/support/{quote(ticket_id, safe='')}")
+        return self._client.get(f"/v1/me/support/{_seg(ticket_id)}")
 
     def reply(self, ticket_id: str, params: CreateReplyParams) -> APIResponse[Dict[str, Any]]:
-        return self._client.post(f"/v1/me/support/{quote(ticket_id, safe='')}/replies", body=params)
+        return self._client.post(f"/v1/me/support/{_seg(ticket_id)}/replies", body=params)
 
 
 class AsyncSupport:
@@ -41,7 +41,7 @@ class AsyncSupport:
         return await self._client.get_paginated("/v1/me/support", query=params)
 
     async def get(self, ticket_id: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/me/support/{quote(ticket_id, safe='')}")
+        return await self._client.get(f"/v1/me/support/{_seg(ticket_id)}")
 
     async def reply(self, ticket_id: str, params: CreateReplyParams) -> APIResponse[Dict[str, Any]]:
-        return await self._client.post(f"/v1/me/support/{quote(ticket_id, safe='')}/replies", body=params)
+        return await self._client.post(f"/v1/me/support/{_seg(ticket_id)}/replies", body=params)

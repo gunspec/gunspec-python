@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
-from urllib.parse import quote
 
 from ..types import ListSnapshotFirearmsParams
+from ._path import _seg
 
 if TYPE_CHECKING:
     from .._core._http_client import APIResponse, AsyncHttpClient, PaginatedResponse, SyncHttpClient
@@ -21,14 +21,10 @@ class GameStats_:
     def list_firearms(
         self, version: str, params: Optional[ListSnapshotFirearmsParams] = None
     ) -> PaginatedResponse[Dict[str, Any]]:
-        return self._client.get_paginated(
-            f"/v1/game-stats/versions/{quote(version, safe='')}/firearms", query=params
-        )
+        return self._client.get_paginated(f"/v1/game-stats/versions/{_seg(version)}/firearms", query=params)
 
     def get_firearm(self, version: str, id: str) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(
-            f"/v1/game-stats/versions/{quote(version, safe='')}/firearms/{quote(id, safe='')}"
-        )
+        return self._client.get(f"/v1/game-stats/versions/{_seg(version)}/firearms/{_seg(id)}")
 
 
 class AsyncGameStats_:
@@ -44,10 +40,8 @@ class AsyncGameStats_:
         self, version: str, params: Optional[ListSnapshotFirearmsParams] = None
     ) -> PaginatedResponse[Dict[str, Any]]:
         return await self._client.get_paginated(
-            f"/v1/game-stats/versions/{quote(version, safe='')}/firearms", query=params
+            f"/v1/game-stats/versions/{_seg(version)}/firearms", query=params
         )
 
     async def get_firearm(self, version: str, id: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(
-            f"/v1/game-stats/versions/{quote(version, safe='')}/firearms/{quote(id, safe='')}"
-        )
+        return await self._client.get(f"/v1/game-stats/versions/{_seg(version)}/firearms/{_seg(id)}")

@@ -1,9 +1,9 @@
 """Receive and verify GunSpec webhook deliveries.
 
 A minimal WSGI app so the example has no web-framework dependency. Run it
-with ``GUNSPEC_WEBHOOK_SECRET`` set to the endpoint's signing key, then point
-an endpoint at ``http://<host>:8000/hooks/gunspec`` (through a tunnel; the API
-only delivers to public https URLs).
+with ``GUNSPEC_WEBHOOK_SECRET`` set to the endpoint's signing key, then run a
+tunnel to ``http://127.0.0.1:8000`` and point an endpoint at its public https
+URL plus ``/hooks/gunspec`` (the API only delivers to public https URLs).
 
     uv run python examples/webhooks.py
 """
@@ -53,6 +53,9 @@ def app(environ: dict, start_response: StartResponse) -> Iterable[bytes]:
 
 
 if __name__ == "__main__":
-    with make_server("", 8000, app) as server:
-        sys.stdout.write("listening on :8000/hooks/gunspec\n")
+    # Loopback only. The tunnel (or reverse proxy) that gives the endpoint its
+    # public https URL forwards to 127.0.0.1:8000; nothing else on the network
+    # needs to reach this process directly.
+    with make_server("127.0.0.1", 8000, app) as server:
+        sys.stdout.write("listening on 127.0.0.1:8000/hooks/gunspec\n")
         server.serve_forever()

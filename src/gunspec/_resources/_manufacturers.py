@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, Iterator, Optional
-from urllib.parse import quote
 
 from ..types import ListManufacturersParams, PaginationParams
+from ._path import _seg
 
 if TYPE_CHECKING:
     from .._core._http_client import APIResponse, AsyncHttpClient, PaginatedResponse, SyncHttpClient
@@ -30,18 +30,18 @@ class Manufacturers:
             page += 1
 
     def get(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/manufacturers/{quote(id, safe='')}")
+        return self._client.get(f"/v1/manufacturers/{_seg(id)}")
 
     def get_firearms(
         self, id: str, params: Optional[PaginationParams] = None
     ) -> PaginatedResponse[Dict[str, Any]]:
-        return self._client.get_paginated(f"/v1/manufacturers/{quote(id, safe='')}/firearms", query=params)
+        return self._client.get_paginated(f"/v1/manufacturers/{_seg(id)}/firearms", query=params)
 
     def get_timeline(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/manufacturers/{quote(id, safe='')}/timeline")
+        return self._client.get(f"/v1/manufacturers/{_seg(id)}/timeline")
 
     def get_stats(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/manufacturers/{quote(id, safe='')}/stats")
+        return self._client.get(f"/v1/manufacturers/{_seg(id)}/stats")
 
 
 class AsyncManufacturers:
@@ -70,17 +70,15 @@ class AsyncManufacturers:
             page += 1
 
     async def get(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/manufacturers/{quote(id, safe='')}")
+        return await self._client.get(f"/v1/manufacturers/{_seg(id)}")
 
     async def get_firearms(
         self, id: str, params: Optional[PaginationParams] = None
     ) -> PaginatedResponse[Dict[str, Any]]:
-        return await self._client.get_paginated(
-            f"/v1/manufacturers/{quote(id, safe='')}/firearms", query=params
-        )
+        return await self._client.get_paginated(f"/v1/manufacturers/{_seg(id)}/firearms", query=params)
 
     async def get_timeline(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/manufacturers/{quote(id, safe='')}/timeline")
+        return await self._client.get(f"/v1/manufacturers/{_seg(id)}/timeline")
 
     async def get_stats(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/manufacturers/{quote(id, safe='')}/stats")
+        return await self._client.get(f"/v1/manufacturers/{_seg(id)}/stats")

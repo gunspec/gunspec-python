@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, Iterator, List, Optional
-from urllib.parse import quote
 
 from ..types import CaliberBallisticsParams, CompareCalibersParams, ListCalibersParams, PaginationParams
+from ._path import _seg
 
 if TYPE_CHECKING:
     from .._core._http_client import APIResponse, AsyncHttpClient, PaginatedResponse, SyncHttpClient
@@ -36,23 +36,23 @@ class Calibers:
         return self._client.get("/v1/calibers/ballistics", query=params)
 
     def get(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/calibers/{quote(id, safe='')}")
+        return self._client.get(f"/v1/calibers/{_seg(id)}")
 
     def get_firearms(
         self, id: str, params: Optional[PaginationParams] = None
     ) -> PaginatedResponse[Dict[str, Any]]:
-        return self._client.get_paginated(f"/v1/calibers/{quote(id, safe='')}/firearms", query=params)
+        return self._client.get_paginated(f"/v1/calibers/{_seg(id)}/firearms", query=params)
 
     def get_parent_chain(self, id: str) -> APIResponse[List[Dict[str, Any]]]:
-        return self._client.get(f"/v1/calibers/{quote(id, safe='')}/parent-chain")
+        return self._client.get(f"/v1/calibers/{_seg(id)}/parent-chain")
 
     def get_family(self, id: str) -> APIResponse[List[Dict[str, Any]]]:
-        return self._client.get(f"/v1/calibers/{quote(id, safe='')}/family")
+        return self._client.get(f"/v1/calibers/{_seg(id)}/family")
 
     def get_ammunition(
         self, id: str, params: Optional[PaginationParams] = None
     ) -> PaginatedResponse[Dict[str, Any]]:
-        return self._client.get_paginated(f"/v1/calibers/{quote(id, safe='')}/ammunition", query=params)
+        return self._client.get_paginated(f"/v1/calibers/{_seg(id)}/ammunition", query=params)
 
 
 class AsyncCalibers:
@@ -85,20 +85,20 @@ class AsyncCalibers:
         return await self._client.get("/v1/calibers/ballistics", query=params)
 
     async def get(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/calibers/{quote(id, safe='')}")
+        return await self._client.get(f"/v1/calibers/{_seg(id)}")
 
     async def get_firearms(
         self, id: str, params: Optional[PaginationParams] = None
     ) -> PaginatedResponse[Dict[str, Any]]:
-        return await self._client.get_paginated(f"/v1/calibers/{quote(id, safe='')}/firearms", query=params)
+        return await self._client.get_paginated(f"/v1/calibers/{_seg(id)}/firearms", query=params)
 
     async def get_parent_chain(self, id: str) -> APIResponse[List[Dict[str, Any]]]:
-        return await self._client.get(f"/v1/calibers/{quote(id, safe='')}/parent-chain")
+        return await self._client.get(f"/v1/calibers/{_seg(id)}/parent-chain")
 
     async def get_family(self, id: str) -> APIResponse[List[Dict[str, Any]]]:
-        return await self._client.get(f"/v1/calibers/{quote(id, safe='')}/family")
+        return await self._client.get(f"/v1/calibers/{_seg(id)}/family")
 
     async def get_ammunition(
         self, id: str, params: Optional[PaginationParams] = None
     ) -> PaginatedResponse[Dict[str, Any]]:
-        return await self._client.get_paginated(f"/v1/calibers/{quote(id, safe='')}/ammunition", query=params)
+        return await self._client.get_paginated(f"/v1/calibers/{_seg(id)}/ammunition", query=params)

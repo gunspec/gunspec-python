@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Dict, List
-from urllib.parse import quote
+
+from ._path import _seg
 
 if TYPE_CHECKING:
     from .._core._http_client import APIResponse, AsyncHttpClient, SyncHttpClient
@@ -17,7 +18,7 @@ class Countries:
         return self._client.get("/v1/countries")
 
     def get_arsenal(self, code: str) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/countries/{quote(code, safe='')}/arsenal")
+        return self._client.get(f"/v1/countries/{_seg(code)}/arsenal")
 
 
 class AsyncCountries:
@@ -30,4 +31,4 @@ class AsyncCountries:
         return await self._client.get("/v1/countries")
 
     async def get_arsenal(self, code: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/countries/{quote(code, safe='')}/arsenal")
+        return await self._client.get(f"/v1/countries/{_seg(code)}/arsenal")

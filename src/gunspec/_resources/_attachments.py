@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, Iterator, List, Optional
-from urllib.parse import quote
 
 from ..types import ListAttachmentsParams, OffersParams, PaginationParams
+from ._path import _seg
 
 if TYPE_CHECKING:
     from .._core._http_client import APIResponse, AsyncHttpClient, PaginatedResponse, SyncHttpClient
@@ -34,17 +34,17 @@ class Attachments:
             page += 1
 
     def get(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/attachments/{quote(id, safe='')}")
+        return self._client.get(f"/v1/attachments/{_seg(id)}")
 
     def get_firearms(
         self, id: str, params: Optional[PaginationParams] = None
     ) -> PaginatedResponse[Dict[str, Any]]:
         """Firearms an attachment fits, with how each fit was reached. Studio."""
-        return self._client.get_paginated(f"/v1/attachments/{quote(id, safe='')}/firearms", query=params)
+        return self._client.get_paginated(f"/v1/attachments/{_seg(id)}/firearms", query=params)
 
     def get_offers(self, id: str, params: Optional[OffersParams] = None) -> APIResponse[List[Dict[str, Any]]]:
         """Sellers stocking this attachment. Link out through ``vendor.click_url``."""
-        return self._client.get(f"/v1/attachments/{quote(id, safe='')}/offers", query=params)
+        return self._client.get(f"/v1/attachments/{_seg(id)}/offers", query=params)
 
 
 class AsyncAttachments:
@@ -71,16 +71,14 @@ class AsyncAttachments:
             page += 1
 
     async def get(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/attachments/{quote(id, safe='')}")
+        return await self._client.get(f"/v1/attachments/{_seg(id)}")
 
     async def get_firearms(
         self, id: str, params: Optional[PaginationParams] = None
     ) -> PaginatedResponse[Dict[str, Any]]:
-        return await self._client.get_paginated(
-            f"/v1/attachments/{quote(id, safe='')}/firearms", query=params
-        )
+        return await self._client.get_paginated(f"/v1/attachments/{_seg(id)}/firearms", query=params)
 
     async def get_offers(
         self, id: str, params: Optional[OffersParams] = None
     ) -> APIResponse[List[Dict[str, Any]]]:
-        return await self._client.get(f"/v1/attachments/{quote(id, safe='')}/offers", query=params)
+        return await self._client.get(f"/v1/attachments/{_seg(id)}/offers", query=params)

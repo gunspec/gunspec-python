@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, Iterator, List, Mapping, Optional
-from urllib.parse import quote
 
 from ..types import (
     ByActionParams,
@@ -23,6 +22,7 @@ from ..types import (
     TopFirearmsParams,
 )
 from ._firearms_extras import AsyncFirearmsExtrasMixin, FirearmsExtrasMixin
+from ._path import _seg
 
 if TYPE_CHECKING:
     from .._core._http_client import APIResponse, AsyncHttpClient, PaginatedResponse, SyncHttpClient
@@ -102,51 +102,51 @@ class Firearms(FirearmsExtrasMixin):
     # -- Single-resource endpoints ---------------------------------------------
 
     def get(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/firearms/{quote(id, safe='')}")
+        return self._client.get(f"/v1/firearms/{_seg(id)}")
 
     def get_variants(self, id: str) -> APIResponse[List[Dict[str, Any]]]:
-        return self._client.get(f"/v1/firearms/{quote(id, safe='')}/variants")
+        return self._client.get(f"/v1/firearms/{_seg(id)}/variants")
 
     def get_images(self, id: str) -> APIResponse[List[Dict[str, Any]]]:
-        return self._client.get(f"/v1/firearms/{quote(id, safe='')}/images")
+        return self._client.get(f"/v1/firearms/{_seg(id)}/images")
 
     def get_game_stats(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/firearms/{quote(id, safe='')}/game-stats")
+        return self._client.get(f"/v1/firearms/{_seg(id)}/game-stats")
 
     def get_dimensions(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/firearms/{quote(id, safe='')}/dimensions")
+        return self._client.get(f"/v1/firearms/{_seg(id)}/dimensions")
 
     def get_schematics(self, id: str) -> APIResponse[List[Dict[str, Any]]]:
-        return self._client.get(f"/v1/firearms/{quote(id, safe='')}/schematics")
+        return self._client.get(f"/v1/firearms/{_seg(id)}/schematics")
 
     def popular(self, params: Optional[Mapping[str, Any]] = None) -> APIResponse[List[Dict[str, Any]]]:
         return self._client.get("/v1/popular/firearms", query=params)
 
     def get_users(self, id: str) -> APIResponse[List[Dict[str, Any]]]:
-        return self._client.get(f"/v1/firearms/{quote(id, safe='')}/users")
+        return self._client.get(f"/v1/firearms/{_seg(id)}/users")
 
     def get_family_tree(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/firearms/{quote(id, safe='')}/family-tree")
+        return self._client.get(f"/v1/firearms/{_seg(id)}/family-tree")
 
     def get_similar(self, id: str) -> APIResponse[List[Dict[str, Any]]]:
-        return self._client.get(f"/v1/firearms/{quote(id, safe='')}/similar")
+        return self._client.get(f"/v1/firearms/{_seg(id)}/similar")
 
     def get_adoption_map(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/firearms/{quote(id, safe='')}/adoption-map")
+        return self._client.get(f"/v1/firearms/{_seg(id)}/adoption-map")
 
     def get_game_profile(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/firearms/{quote(id, safe='')}/game-profile")
+        return self._client.get(f"/v1/firearms/{_seg(id)}/game-profile")
 
     def get_silhouette(
         self, id: str, params: Optional[SilhouetteParams] = None
     ) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/firearms/{quote(id, safe='')}/silhouette", query=params)
+        return self._client.get(f"/v1/firearms/{_seg(id)}/silhouette", query=params)
 
     def calculate(self, id: str, params: CalculateBallisticsParams) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/firearms/{quote(id, safe='')}/calculate", query=params)
+        return self._client.get(f"/v1/firearms/{_seg(id)}/calculate", query=params)
 
     def load(self, id: str, params: Optional[LoadFirearmParams] = None) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/firearms/{quote(id, safe='')}/load", query=params)
+        return self._client.get(f"/v1/firearms/{_seg(id)}/load", query=params)
 
 
 class AsyncFirearms(AsyncFirearmsExtrasMixin):
@@ -224,48 +224,48 @@ class AsyncFirearms(AsyncFirearmsExtrasMixin):
     # -- Single-resource endpoints ---------------------------------------------
 
     async def get(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/firearms/{quote(id, safe='')}")
+        return await self._client.get(f"/v1/firearms/{_seg(id)}")
 
     async def get_variants(self, id: str) -> APIResponse[List[Dict[str, Any]]]:
-        return await self._client.get(f"/v1/firearms/{quote(id, safe='')}/variants")
+        return await self._client.get(f"/v1/firearms/{_seg(id)}/variants")
 
     async def get_images(self, id: str) -> APIResponse[List[Dict[str, Any]]]:
-        return await self._client.get(f"/v1/firearms/{quote(id, safe='')}/images")
+        return await self._client.get(f"/v1/firearms/{_seg(id)}/images")
 
     async def get_game_stats(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/firearms/{quote(id, safe='')}/game-stats")
+        return await self._client.get(f"/v1/firearms/{_seg(id)}/game-stats")
 
     async def get_dimensions(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/firearms/{quote(id, safe='')}/dimensions")
+        return await self._client.get(f"/v1/firearms/{_seg(id)}/dimensions")
 
     async def get_schematics(self, id: str) -> APIResponse[List[Dict[str, Any]]]:
-        return await self._client.get(f"/v1/firearms/{quote(id, safe='')}/schematics")
+        return await self._client.get(f"/v1/firearms/{_seg(id)}/schematics")
 
     async def popular(self, params: Optional[Mapping[str, Any]] = None) -> APIResponse[List[Dict[str, Any]]]:
         return await self._client.get("/v1/popular/firearms", query=params)
 
     async def get_users(self, id: str) -> APIResponse[List[Dict[str, Any]]]:
-        return await self._client.get(f"/v1/firearms/{quote(id, safe='')}/users")
+        return await self._client.get(f"/v1/firearms/{_seg(id)}/users")
 
     async def get_family_tree(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/firearms/{quote(id, safe='')}/family-tree")
+        return await self._client.get(f"/v1/firearms/{_seg(id)}/family-tree")
 
     async def get_similar(self, id: str) -> APIResponse[List[Dict[str, Any]]]:
-        return await self._client.get(f"/v1/firearms/{quote(id, safe='')}/similar")
+        return await self._client.get(f"/v1/firearms/{_seg(id)}/similar")
 
     async def get_adoption_map(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/firearms/{quote(id, safe='')}/adoption-map")
+        return await self._client.get(f"/v1/firearms/{_seg(id)}/adoption-map")
 
     async def get_game_profile(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/firearms/{quote(id, safe='')}/game-profile")
+        return await self._client.get(f"/v1/firearms/{_seg(id)}/game-profile")
 
     async def get_silhouette(
         self, id: str, params: Optional[SilhouetteParams] = None
     ) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/firearms/{quote(id, safe='')}/silhouette", query=params)
+        return await self._client.get(f"/v1/firearms/{_seg(id)}/silhouette", query=params)
 
     async def calculate(self, id: str, params: CalculateBallisticsParams) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/firearms/{quote(id, safe='')}/calculate", query=params)
+        return await self._client.get(f"/v1/firearms/{_seg(id)}/calculate", query=params)
 
     async def load(self, id: str, params: Optional[LoadFirearmParams] = None) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/firearms/{quote(id, safe='')}/load", query=params)
+        return await self._client.get(f"/v1/firearms/{_seg(id)}/load", query=params)

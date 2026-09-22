@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Dict, Optional
-from urllib.parse import quote
 
 from ..types import ListFavoritesParams
+from ._path import _seg
 
 if TYPE_CHECKING:
     from .._core._http_client import APIResponse, AsyncHttpClient, PaginatedResponse, SyncHttpClient
@@ -24,11 +24,11 @@ class Favorites:
 
     def add(self, firearm_id: str) -> APIResponse[Dict[str, Any]]:
         """Idempotent add; ``data`` is ``{"firearmId", "favorited": True}``."""
-        return self._client.post(f"/v1/me/favorites/{quote(firearm_id, safe='')}")
+        return self._client.post(f"/v1/me/favorites/{_seg(firearm_id)}")
 
     def remove(self, firearm_id: str) -> APIResponse[Dict[str, Any]]:
         """``data`` is ``{"firearmId", "favorited": False}``."""
-        return self._client.delete(f"/v1/me/favorites/{quote(firearm_id, safe='')}")
+        return self._client.delete(f"/v1/me/favorites/{_seg(firearm_id)}")
 
 
 class AsyncFavorites:
@@ -44,7 +44,7 @@ class AsyncFavorites:
         return await self._client.get("/v1/me/favorites/ids")
 
     async def add(self, firearm_id: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.post(f"/v1/me/favorites/{quote(firearm_id, safe='')}")
+        return await self._client.post(f"/v1/me/favorites/{_seg(firearm_id)}")
 
     async def remove(self, firearm_id: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.delete(f"/v1/me/favorites/{quote(firearm_id, safe='')}")
+        return await self._client.delete(f"/v1/me/favorites/{_seg(firearm_id)}")

@@ -17,7 +17,7 @@ from .._auth import (
     mask_api_key,
     resolve_api_key,
 )
-from .._errors import ConnectError, RequestTimeoutError
+from .._errors import ConnectError, GunSpecError, RequestTimeoutError
 from .._etag_cache import (
     CachedEntry,
     ETagStore,
@@ -37,6 +37,16 @@ Query = Optional[Mapping[str, Any]]
 DEFAULT_BASE_URL = "https://api.gunspec.io"
 DEFAULT_TIMEOUT = 30.0
 SDK_USER_AGENT = f"gunspec-sdk/python/{__version__}"
+
+MAX_REDIRECTS = 5
+"""Hops a raw download follows before giving up. The API answers a media or
+model request with one redirect to the asset host, so five is generous."""
+
+_AUTH_HEADERS = ("x-api-key", "authorization")
+"""Header names that carry the credential, compared lower-case."""
+
+_BODY_HEADERS = ("content-type", "content-length", "transfer-encoding")
+_DEFAULT_PORTS = {"http": 80, "https": 443}
 
 
 @dataclass
@@ -74,6 +84,11 @@ def serialize_query(params: Optional[Mapping[str, Any]]) -> Dict[str, Any]:
     return out
 
 
+def _origin(url: httpx.URL) -> Tuple[str, str, Optional[int]]:
+    """Scheme, host and effective port, the triple two URLs must share to be one origin."""
+    return (url.scheme, url.host, url.port or _DEFAULT_PORTS.get(url.scheme))
+
+
 class _BaseHttpClient:
     """State and pure helpers shared by the sync and async clients."""
 
@@ -96,7 +111,13 @@ class _BaseHttpClient:
         )
         self._fingerprint = credential_fingerprint(self._api_key)
 
-        assert_transport_security(self._base_url, self._api_key is not None, cfg.allow_insecure)
+        # A key passed through ``headers`` travels exactly like one passed as
+        # ``api_key``, so it has to pass the same transport check.
+        header_auth = any(k.lower() in _AUTH_HEADERS and v for k, v in cfg.headers.items())
+        assert_transport_security(
+            self._base_url, self._api_key is not None or header_auth, cfg.allow_insecure
+        )
+        self._base_origin = _origin(httpx.URL(self._base_url))
 
         self._default_headers = {
             "Accept": "application/json",
@@ -169,6 +190,52 @@ class _BaseHttpClient:
         if cacheable and etag and self._store is not None:
             self._store.set(key, CachedEntry(etag=etag, body=text, stored_at=now()))
         return text, False
+
+    def _redirect_request(self, request: httpx.Request, response: httpx.Response, hops: int) -> httpx.Request:
+        """The request for the next hop of a redirect the SDK follows by hand.
+
+        httpx would follow it too, but it only drops ``Authorization`` on a
+        cross-origin hop and keeps ``X-API-Key``, so a redirect to an asset
+        host (or anywhere a compromised or misconfigured edge points) would
+        receive the key. Here both credential headers go only to the origin
+        of ``base_url``, and a hop from https down to http is refused
+        outright, because it would put every header in the clear.
+
+        Raises ``GunSpecError`` past ``MAX_REDIRECTS`` hops, on a downgrade
+        to http, and on a ``Location`` that is not an http(s) URL.
+        """
+        if hops >= MAX_REDIRECTS:
+            raise GunSpecError(f"Stopped after {MAX_REDIRECTS} redirects from {request.url}")
+        url = request.url.join(response.headers["Location"])
+        if url.scheme not in ("http", "https") or not url.host:
+            raise GunSpecError(f"Refusing to follow a redirect to {url}: not an http(s) URL")
+        if request.url.scheme == "https" and url.scheme == "http":
+            raise GunSpecError(
+                f"Refusing to follow a redirect from https to http ({url}): "
+                "it would send the request in the clear"
+            )
+
+        method = request.method
+        status = response.status_code
+        # The same method rewrite browsers and httpx apply: a 303 always turns
+        # into a GET, and so do 301 and 302 after a POST.
+        rewrite = (status == 303 and method != "HEAD") or (status in (301, 302) and method == "POST")
+        headers = httpx.Headers(request.headers)
+        headers.pop("Host", None)
+        if rewrite:
+            method = "GET"
+            for name in _BODY_HEADERS:
+                headers.pop(name, None)
+        if _origin(url) != self._base_origin:
+            for name in _AUTH_HEADERS:
+                headers.pop(name, None)
+        return httpx.Request(
+            method,
+            url,
+            headers=headers,
+            content=None if rewrite else request.content,
+            extensions=request.extensions,
+        )
 
     @staticmethod
     def _wrap_transport_error(exc: Exception, timeout: float) -> Exception:

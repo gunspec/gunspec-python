@@ -11,7 +11,6 @@ TypeScript method has a Python counterpart or a note saying why not."""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
-from urllib.parse import quote
 
 from ..types import (
     FirearmAttachmentsParams,
@@ -21,6 +20,7 @@ from ..types import (
     MediaCatalogParams,
     OffersParams,
 )
+from ._path import _seg
 
 if TYPE_CHECKING:
     from .._core._http_client import (
@@ -33,7 +33,7 @@ if TYPE_CHECKING:
 
 
 def _slug(id: str) -> str:
-    return f"/v1/firearms/{quote(id, safe='')}"
+    return f"/v1/firearms/{_seg(id)}"
 
 
 class FirearmsExtrasMixin:
@@ -74,7 +74,7 @@ class FirearmsExtrasMixin:
         @endpoint GET /v1/firearms/{id}/media/{selector}
         """
         return self._client.get(
-            f"{_slug(id)}/media/{quote(str(selector), safe='')}",
+            f"{_slug(id)}/media/{_seg(selector)}",
             query={**(params or {}), "format": "json"},
         )
 
@@ -86,7 +86,7 @@ class FirearmsExtrasMixin:
         @endpoint GET /v1/firearms/{id}/media/{selector}
         """
         return self._client.get_bytes(
-            f"{_slug(id)}/media/{quote(str(selector), safe='')}",
+            f"{_slug(id)}/media/{_seg(selector)}",
             query={**(params or {}), "format": "raw"},
         )
 
@@ -98,7 +98,7 @@ class FirearmsExtrasMixin:
         @endpoint GET /v1/firearms/{id}/images/{imageId}
         """
         return self._client.get(
-            f"{_slug(id)}/images/{quote(str(image_id), safe='')}",
+            f"{_slug(id)}/images/{_seg(image_id)}",
             query={**(params or {}), "format": "datauri"},
         )
 
@@ -160,7 +160,7 @@ class AsyncFirearmsExtrasMixin:
         self, id: str, selector: Union[str, int], params: Optional[GetFirearmMediaParams] = None
     ) -> APIResponse[Dict[str, Any]]:
         return await self._client.get(
-            f"{_slug(id)}/media/{quote(str(selector), safe='')}",
+            f"{_slug(id)}/media/{_seg(selector)}",
             query={**(params or {}), "format": "json"},
         )
 
@@ -168,7 +168,7 @@ class AsyncFirearmsExtrasMixin:
         self, id: str, selector: Union[str, int], params: Optional[GetFirearmMediaParams] = None
     ) -> RawResponse:
         return await self._client.get_bytes(
-            f"{_slug(id)}/media/{quote(str(selector), safe='')}",
+            f"{_slug(id)}/media/{_seg(selector)}",
             query={**(params or {}), "format": "raw"},
         )
 
@@ -176,7 +176,7 @@ class AsyncFirearmsExtrasMixin:
         self, id: str, image_id: Union[str, int], params: Optional[ImageAssetParams] = None
     ) -> APIResponse[Dict[str, Any]]:
         return await self._client.get(
-            f"{_slug(id)}/images/{quote(str(image_id), safe='')}",
+            f"{_slug(id)}/images/{_seg(image_id)}",
             query={**(params or {}), "format": "datauri"},
         )
 

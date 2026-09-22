@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, Iterator, Optional
-from urllib.parse import quote
 
 from ..types import AmmunitionBallisticsParams, ListAmmunitionParams
+from ._path import _seg
 
 if TYPE_CHECKING:
     from .._core._http_client import APIResponse, AsyncHttpClient, PaginatedResponse, SyncHttpClient
@@ -30,19 +30,19 @@ class Ammunition:
             page += 1
 
     def get(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/ammunition/{quote(id, safe='')}")
+        return self._client.get(f"/v1/ammunition/{_seg(id)}")
 
     def get_bullet_svg(self, id: str) -> str:
         """The bullet profile as an SVG string. Not an envelope: read as text.
 
         @endpoint GET /v1/ammunition/{id}/bullet.svg
         """
-        return self._client.get_text(f"/v1/ammunition/{quote(id, safe='')}/bullet.svg")
+        return self._client.get_text(f"/v1/ammunition/{_seg(id)}/bullet.svg")
 
     def ballistics(
         self, id: str, params: Optional[AmmunitionBallisticsParams] = None
     ) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/ammunition/{quote(id, safe='')}/ballistics", query=params)
+        return self._client.get(f"/v1/ammunition/{_seg(id)}/ballistics", query=params)
 
 
 class AsyncAmmunition:
@@ -69,13 +69,13 @@ class AsyncAmmunition:
             page += 1
 
     async def get(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/ammunition/{quote(id, safe='')}")
+        return await self._client.get(f"/v1/ammunition/{_seg(id)}")
 
     async def get_bullet_svg(self, id: str) -> str:
         """The bullet profile as an SVG string. Not an envelope: read as text."""
-        return await self._client.get_text(f"/v1/ammunition/{quote(id, safe='')}/bullet.svg")
+        return await self._client.get_text(f"/v1/ammunition/{_seg(id)}/bullet.svg")
 
     async def ballistics(
         self, id: str, params: Optional[AmmunitionBallisticsParams] = None
     ) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/ammunition/{quote(id, safe='')}/ballistics", query=params)
+        return await self._client.get(f"/v1/ammunition/{_seg(id)}/ballistics", query=params)

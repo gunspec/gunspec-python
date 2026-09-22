@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
-from urllib.parse import quote
 
 from ..types import PaginationParams
+from ._path import _seg
 
 if TYPE_CHECKING:
     from .._core._http_client import APIResponse, AsyncHttpClient, PaginatedResponse, SyncHttpClient
@@ -21,7 +21,7 @@ class Categories:
     def get_firearms(
         self, slug: str, params: Optional[PaginationParams] = None
     ) -> PaginatedResponse[Dict[str, Any]]:
-        return self._client.get_paginated(f"/v1/categories/{quote(slug, safe='')}/firearms", query=params)
+        return self._client.get_paginated(f"/v1/categories/{_seg(slug)}/firearms", query=params)
 
 
 class AsyncCategories:
@@ -36,6 +36,4 @@ class AsyncCategories:
     async def get_firearms(
         self, slug: str, params: Optional[PaginationParams] = None
     ) -> PaginatedResponse[Dict[str, Any]]:
-        return await self._client.get_paginated(
-            f"/v1/categories/{quote(slug, safe='')}/firearms", query=params
-        )
+        return await self._client.get_paginated(f"/v1/categories/{_seg(slug)}/firearms", query=params)

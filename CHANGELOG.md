@@ -2,41 +2,49 @@
 
 All notable changes to the `gunspec` Python package. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the package follows [Semantic Versioning](https://semver.org/).
 
-## [0.7.0](https://github.com/BuunGroupCore/gunspec-vite-v6-cloudflare/compare/sdk-py-v0.6.0...sdk-py-v0.7.0) (2026-09-22)
-
-
-### Added
-
-* build apps/site, serve ten fields as arrays, enforce the craft rules ([bcec6f3](https://github.com/BuunGroupCore/gunspec-vite-v6-cloudflare/commit/bcec6f30fbb04ff4d017a3021f776472b0c74e5a))
-* give the MCP the docs, report the daily allowance, retire three web pages ([a5638f8](https://github.com/BuunGroupCore/gunspec-vite-v6-cloudflare/commit/a5638f8281e702b0418f07a21e238f7af1294b2e))
-* publish dated updates, and give the reasoning a page of its own ([e7f1e80](https://github.com/BuunGroupCore/gunspec-vite-v6-cloudflare/commit/e7f1e80ddbb32a82b47cddfcb14448b9bfa5deba))
-
-## [0.6.0](https://github.com/BuunGroupCore/gunspec-vite-v6-cloudflare/compare/sdk-py-v0.5.0...sdk-py-v0.6.0) (2026-09-17)
-
-
-### Added
-
-* serve the API reference to code at /v1/docs ([febef92](https://github.com/BuunGroupCore/gunspec-vite-v6-cloudflare/commit/febef920fa472dfc1071918e40694e510e1e57fe))
+## 0.7.1 (2026-09-22)
 
 
 ### Fixed
 
-* document GET /v1/data/tasks/summary, and test the docs resources in both SDKs ([e17812f](https://github.com/BuunGroupCore/gunspec-vite-v6-cloudflare/commit/e17812ff4db2dae84a76dda638fb7238c8f83af5))
-* require an Explorer key for /v1/docs ([bccd31b](https://github.com/BuunGroupCore/gunspec-vite-v6-cloudflare/commit/bccd31b4680c216e7bc8dce8975a053f2aee8abb))
+* **sdk-python:** the API key never follows a redirect off the API's origin (f8646f3)
+* **sdk,sdk-python:** the models carry the fields the API now serves (925ad51)
 
-## [0.5.0](https://github.com/BuunGroupCore/gunspec-vite-v6-cloudflare/compare/sdk-py-v0.4.0...sdk-py-v0.5.0) (2026-09-17)
-
-
-### Added
-
-* **sdk:** workflow tools, MCP usage and manufacturer status in both SDKs ([eefc1c2](https://github.com/BuunGroupCore/gunspec-vite-v6-cloudflare/commit/eefc1c2e966ee3392feccd75ef9d26d4451fab60))
-
-## [0.4.0](https://github.com/BuunGroupCore/gunspec-vite-v6-cloudflare/compare/sdk-py-v0.3.0...sdk-py-v0.4.0) (2026-09-13)
+## 0.7.0 (2026-09-22)
 
 
 ### Added
 
-* publish whether the reference is still true, and run the cURL samples ([7803ed0](https://github.com/BuunGroupCore/gunspec-vite-v6-cloudflare/commit/7803ed0b76eab49d8a1d7abd7a5ca60cd1d67896))
+* build apps/site, serve ten fields as arrays, enforce the craft rules (bcec6f3)
+* give the MCP the docs, report the daily allowance, retire three web pages (a5638f8)
+* publish dated updates, and give the reasoning a page of its own (e7f1e80)
+
+## 0.6.0 (2026-09-17)
+
+
+### Added
+
+* serve the API reference to code at /v1/docs (febef92)
+
+
+### Fixed
+
+* document GET /v1/data/tasks/summary, and test the docs resources in both SDKs (e17812f)
+* require an Explorer key for /v1/docs (bccd31b)
+
+## 0.5.0 (2026-09-17)
+
+
+### Added
+
+* **sdk:** workflow tools, MCP usage and manufacturer status in both SDKs (eefc1c2)
+
+## 0.4.0 (2026-09-13)
+
+
+### Added
+
+* publish whether the reference is still true, and run the cURL samples (7803ed0)
 
 ## [0.3.0] - 2026-09-13
 

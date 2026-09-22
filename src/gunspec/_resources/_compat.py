@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
-from urllib.parse import quote
 
 from ..types import ListInterfacesParams, PaginationParams
+from ._path import _seg
 
 if TYPE_CHECKING:
     from .._core._http_client import APIResponse, AsyncHttpClient, PaginatedResponse, SyncHttpClient
@@ -23,7 +23,7 @@ class Interfaces:
         self, id: str, params: Optional[PaginationParams] = None
     ) -> PaginatedResponse[Dict[str, Any]]:
         """Firearms exposing a standard. The id's colon and slash are encoded. Studio."""
-        return self._client.get_paginated(f"/v1/interfaces/{quote(id, safe='')}/firearms", query=params)
+        return self._client.get_paginated(f"/v1/interfaces/{_seg(id)}/firearms", query=params)
 
 
 class AsyncInterfaces:
@@ -38,7 +38,7 @@ class AsyncInterfaces:
     async def get_firearms(
         self, id: str, params: Optional[PaginationParams] = None
     ) -> PaginatedResponse[Dict[str, Any]]:
-        return await self._client.get_paginated(f"/v1/interfaces/{quote(id, safe='')}/firearms", query=params)
+        return await self._client.get_paginated(f"/v1/interfaces/{_seg(id)}/firearms", query=params)
 
 
 class Platforms:
@@ -52,7 +52,7 @@ class Platforms:
         return self._client.get("/v1/platforms")
 
     def get(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/platforms/{quote(id, safe='')}")
+        return self._client.get(f"/v1/platforms/{_seg(id)}")
 
 
 class AsyncPlatforms:
@@ -65,4 +65,4 @@ class AsyncPlatforms:
         return await self._client.get("/v1/platforms")
 
     async def get(self, id: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/platforms/{quote(id, safe='')}")
+        return await self._client.get(f"/v1/platforms/{_seg(id)}")

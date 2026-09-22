@@ -27,10 +27,22 @@ WEBHOOK_HEADERS: Dict[str, str] = {
 the delivery id when asking why one never arrived."""
 
 _HEX = re.compile(r"^[0-9a-fA-F]+$")
+_DIGITS = re.compile(r"^[0-9]{1,15}$")
 
 
 class WebhookSignatureError(GunSpecError):
     """Raised when a delivery fails verification. The body is untrusted."""
+
+
+def _decode_body(raw_body: Union[str, bytes]) -> str:
+    """The body as text. A body that is not UTF-8 was not sent by GunSpec, so
+    it fails verification rather than escaping as a UnicodeDecodeError."""
+    if not isinstance(raw_body, bytes):
+        return raw_body
+    try:
+        return raw_body.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise WebhookSignatureError("Delivery body is not UTF-8") from exc
 
 
 def parse_signature_header(header: Optional[str]) -> Tuple[int, List[str]]:
@@ -45,10 +57,9 @@ def parse_signature_header(header: Optional[str]) -> Tuple[int, List[str]]:
             continue
         key, value = key.strip(), value.strip()
         if key == "t":
-            try:
-                timestamp = int(float(value))
-            except ValueError:
-                timestamp = None
+            # Whole seconds only. ``float()`` accepted ``inf`` and ``1e400``,
+            # which then raised OverflowError instead of this module's error.
+            timestamp = int(value) if _DIGITS.match(value) else None
         elif key == "v1" and _HEX.match(value):
             signatures.append(value.lower())
     if timestamp is None:
@@ -82,7 +93,7 @@ def verify_webhook_signature(
     """
     if not secret:
         raise WebhookSignatureError("Webhook secret is empty")
-    body = raw_body.decode("utf-8") if isinstance(raw_body, bytes) else raw_body
+    body = _decode_body(raw_body)
     timestamp, signatures = parse_signature_header(signature_header)
 
     current = int((now or time.time)())
@@ -112,7 +123,7 @@ def construct_webhook_event(
             mirror.upsert(event["data"])
     """
     verify_webhook_signature(raw_body, signature_header, secret, tolerance_seconds=tolerance_seconds, now=now)
-    body = raw_body.decode("utf-8") if isinstance(raw_body, bytes) else raw_body
+    body = _decode_body(raw_body)
     try:
         parsed = json.loads(body)
     except ValueError as exc:

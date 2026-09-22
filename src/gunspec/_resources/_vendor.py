@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
-from urllib.parse import quote
 
 from ..types import ListVendorOffersParams, PushOffersInput, UpdateOfferInput, VendorScope
+from ._path import _seg
 
 if TYPE_CHECKING:
     from .._core._http_client import APIResponse, AsyncHttpClient, PaginatedResponse, SyncHttpClient
@@ -41,11 +41,11 @@ class Vendor:
         self, sku: str, body: UpdateOfferInput, scope: Optional[UpdateOfferInput] = None
     ) -> APIResponse[Dict[str, Any]]:
         """Change one listing. Absent fields are unchanged."""
-        return self._client.patch(f"/v1/vendor/offers/{quote(sku, safe='')}", body=body, query=scope)
+        return self._client.patch(f"/v1/vendor/offers/{_seg(sku)}", body=body, query=scope)
 
     def delete_offer(self, sku: str, scope: Optional[VendorScope] = None) -> APIResponse[Dict[str, Any]]:
         """Withdraw one listing."""
-        return self._client.delete(f"/v1/vendor/offers/{quote(sku, safe='')}", query=scope)
+        return self._client.delete(f"/v1/vendor/offers/{_seg(sku)}", query=scope)
 
     def click_url(self, click_id: str, locale: Optional[str] = None) -> str:
         """The tracked outbound link for an offer's ``clickId``. Render this as
@@ -58,14 +58,14 @@ class Vendor:
 
         @endpoint GET /v1/out/{clickId}
         """
-        return self._client.url_for(f"/v1/out/{quote(click_id, safe='')}", {"l": locale} if locale else None)
+        return self._client.url_for(f"/v1/out/{_seg(click_id)}", {"l": locale} if locale else None)
 
     def resolve_click(self, click_id: str) -> Optional[str]:
         """Follow a click server-side and return the shop URL. Counts as a visit.
 
         @endpoint GET /v1/out/{clickId}
         """
-        return self._client.resolve_redirect(f"/v1/out/{quote(click_id, safe='')}")
+        return self._client.resolve_redirect(f"/v1/out/{_seg(click_id)}")
 
 
 class AsyncVendor:
@@ -90,15 +90,15 @@ class AsyncVendor:
     async def update_offer(
         self, sku: str, body: UpdateOfferInput, scope: Optional[UpdateOfferInput] = None
     ) -> APIResponse[Dict[str, Any]]:
-        return await self._client.patch(f"/v1/vendor/offers/{quote(sku, safe='')}", body=body, query=scope)
+        return await self._client.patch(f"/v1/vendor/offers/{_seg(sku)}", body=body, query=scope)
 
     async def delete_offer(
         self, sku: str, scope: Optional[VendorScope] = None
     ) -> APIResponse[Dict[str, Any]]:
-        return await self._client.delete(f"/v1/vendor/offers/{quote(sku, safe='')}", query=scope)
+        return await self._client.delete(f"/v1/vendor/offers/{_seg(sku)}", query=scope)
 
     def click_url(self, click_id: str, locale: Optional[str] = None) -> str:
-        return self._client.url_for(f"/v1/out/{quote(click_id, safe='')}", {"l": locale} if locale else None)
+        return self._client.url_for(f"/v1/out/{_seg(click_id)}", {"l": locale} if locale else None)
 
     async def resolve_click(self, click_id: str) -> Optional[str]:
-        return await self._client.resolve_redirect(f"/v1/out/{quote(click_id, safe='')}")
+        return await self._client.resolve_redirect(f"/v1/out/{_seg(click_id)}")

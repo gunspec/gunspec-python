@@ -243,8 +243,16 @@ class SyncHttpClient(_BaseHttpClient):
     ) -> httpx.Response:
         req = self._build(method, path, query, body, headers, if_none_match)
         try:
-            return self._client.request(
-                timeout=timeout or self._timeout, follow_redirects=follow_redirects, **req
-            )
+            request = self._client.build_request(timeout=timeout or self._timeout, **req)
+            response = self._client.send(request, follow_redirects=False)
+            # Redirects are followed here rather than by httpx, so the key
+            # never leaves the API's origin (see ``_redirect_request``).
+            hops = 0
+            while follow_redirects and response.is_redirect:
+                request = self._redirect_request(request, response, hops)
+                hops += 1
+                response.close()
+                response = self._client.send(request, follow_redirects=False)
+            return response
         except (httpx.TimeoutException, httpx.ConnectError) as exc:
             raise self._wrap_transport_error(exc, timeout or self._timeout) from exc

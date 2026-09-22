@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Dict, Mapping, Optional, Union
-from urllib.parse import quote
+
+from ._path import _seg
 
 if TYPE_CHECKING:
     from .._core._http_client import APIResponse, AsyncHttpClient, PaginatedResponse, SyncHttpClient
@@ -21,7 +22,7 @@ class Content:
         return self._client.get_paginated("/v1/changelog", query=params)
 
     def get_changelog_entry(self, id: Union[str, int]) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/changelog/{quote(str(id), safe='')}")
+        return self._client.get(f"/v1/changelog/{_seg(id)}")
 
     def list_blog_posts(
         self, params: Optional[Mapping[str, Any]] = None
@@ -29,7 +30,7 @@ class Content:
         return self._client.get_paginated("/v1/blog", query=params)
 
     def get_blog_post(self, slug: str) -> APIResponse[Dict[str, Any]]:
-        return self._client.get(f"/v1/blog/{quote(slug, safe='')}")
+        return self._client.get(f"/v1/blog/{_seg(slug)}")
 
     def list_notices(self) -> APIResponse[Dict[str, Any]]:
         """The notices the website is showing right now, best first. Public."""
@@ -48,7 +49,7 @@ class AsyncContent:
         return await self._client.get_paginated("/v1/changelog", query=params)
 
     async def get_changelog_entry(self, id: Union[str, int]) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/changelog/{quote(str(id), safe='')}")
+        return await self._client.get(f"/v1/changelog/{_seg(id)}")
 
     async def list_blog_posts(
         self, params: Optional[Mapping[str, Any]] = None
@@ -56,7 +57,7 @@ class AsyncContent:
         return await self._client.get_paginated("/v1/blog", query=params)
 
     async def get_blog_post(self, slug: str) -> APIResponse[Dict[str, Any]]:
-        return await self._client.get(f"/v1/blog/{quote(slug, safe='')}")
+        return await self._client.get(f"/v1/blog/{_seg(slug)}")
 
     async def list_notices(self) -> APIResponse[Dict[str, Any]]:
         """The notices the website is showing right now, best first. Public."""
