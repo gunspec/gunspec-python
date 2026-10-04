@@ -23,6 +23,7 @@ from ._resources import (
     AsyncDataQuality,
     AsyncDocs,
     AsyncFavorites,
+    AsyncFeatures,
     AsyncFirearms,
     AsyncGame,
     AsyncGameStats_,
@@ -45,6 +46,7 @@ from ._resources import (
     DataQuality,
     Docs,
     Favorites,
+    Features,
     Firearms,
     Game,
     GameStats_,
@@ -118,6 +120,7 @@ class GunSpec:
     manufacturers: Manufacturers
     calibers: Calibers
     categories: Categories
+    features: Features
     stats: Stats
     game: Game
     game_stats: GameStats_
@@ -160,6 +163,7 @@ class GunSpec:
         self.manufacturers = Manufacturers(self._client)
         self.calibers = Calibers(self._client)
         self.categories = Categories(self._client)
+        self.features = Features(self._client)
         self.stats = Stats(self._client)
         self.game = Game(self._client)
         self.game_stats = GameStats_(self._client)
@@ -221,6 +225,7 @@ class AsyncGunSpec:
     manufacturers: AsyncManufacturers
     calibers: AsyncCalibers
     categories: AsyncCategories
+    features: AsyncFeatures
     stats: AsyncStats
     game: AsyncGame
     game_stats: AsyncGameStats_
@@ -263,6 +268,7 @@ class AsyncGunSpec:
         self.manufacturers = AsyncManufacturers(self._client)
         self.calibers = AsyncCalibers(self._client)
         self.categories = AsyncCategories(self._client)
+        self.features = AsyncFeatures(self._client)
         self.stats = AsyncStats(self._client)
         self.game = AsyncGame(self._client)
         self.game_stats = AsyncGameStats_(self._client)

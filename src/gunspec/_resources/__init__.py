@@ -10,6 +10,7 @@ from ._countries import AsyncCountries, Countries
 from ._data_quality import AsyncDataQuality, DataQuality
 from ._docs import AsyncDocs, Docs
 from ._favorites import AsyncFavorites, Favorites
+from ._features import AsyncFeatures, Features
 from ._firearms import AsyncFirearms, Firearms
 from ._game import AsyncGame, Game
 from ._game_stats import AsyncGameStats_, GameStats_
@@ -40,6 +41,7 @@ __all__ = [
     "AsyncAmmunition",
     "AsyncCalibers",
     "AsyncCategories",
+    "AsyncFeatures",
     "AsyncConflicts",
     "AsyncCountries",
     "AsyncDataQuality",
@@ -55,6 +57,7 @@ __all__ = [
     "AsyncWebhooks",
     "Calibers",
     "Categories",
+    "Features",
     "Conflicts",
     "Countries",
     "DataQuality",

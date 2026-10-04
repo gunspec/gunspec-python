@@ -227,6 +227,19 @@ class Category(BaseModel):
     description: Optional[str] = None
 
 
+# Feature icons
+
+
+class FeatureIcon(BaseModel):
+    """A drawn feature icon, from ``GET /v1/features/icons``."""
+
+    model_config = _MODEL_CONFIG
+
+    name: str
+    label: str
+    icon_url: str
+
+
 # Countries
 
 

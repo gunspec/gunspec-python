@@ -2,6 +2,35 @@
 
 All notable changes to the `gunspec` Python package. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the package follows [Semantic Versioning](https://semver.org/).
 
+## 0.8.1 (2026-10-04)
+
+
+### Fixed
+
+* responses stop carrying console columns, and the spec says which fields are conditional (9452b45)
+* **sdk-python:** sort the package imports and wrap two long comments so the PyPI lint passes (bd2d39a)
+
+## 0.8.0 (2026-10-04)
+
+
+### Added
+
+* abuse holds, monthly limits, edge blocking, Google reports and the staff pages for them (680c46f)
+* endpoint credits, staff leaderboard, and social cards drawn ahead of time (b7a3117)
+* feature icons in the API, on firearm records and as a catalogue (24c16ee)
+* feature icons move into a firearm's media, behind an API key (001a4a6)
+* load-carriage endpoint, the metabolic cost of marching with each firearm (280f8f3)
+* question-led studies with open-access literature, live study runs, and peer_reviewed sources (90edb81)
+* recoil, point-blank and ammo-load analyses, and agent runs as a page with a timeline and a chat (db7a61b)
+* **sdk:** types for the new search filters, task numbers and research inputs (ad8c6f2)
+* staff reaches the API through StaffEntrypoint; blog and staff drop the secret (7af4ea8)
+* the catalogue repository and Redback's queue sync both ways through a GitHub App (cce0bb8)
+
+
+### Fixed
+
+* SDK types carry the spec's provenance, routes, author and verified fields (7a075cc)
+
 ## 0.7.1 (2026-09-22)
 
 

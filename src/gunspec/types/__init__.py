@@ -12,6 +12,7 @@ from gunspec.types.compat import FirearmAttachmentsGroup as FirearmAttachmentsGr
 from gunspec.types.compat import FirearmAttachmentsParams as FirearmAttachmentsParams
 from gunspec.types.compat import FirearmInterface as FirearmInterface
 from gunspec.types.compat import FirearmInterfaces as FirearmInterfaces
+from gunspec.types.compat import FitRoute as FitRoute
 from gunspec.types.compat import FitSource as FitSource
 from gunspec.types.compat import FitType as FitType
 from gunspec.types.compat import FitVia as FitVia
@@ -43,6 +44,7 @@ from gunspec.types.media import ListFirearmMediaParams as ListFirearmMediaParams
 from gunspec.types.media import MediaCatalogItem as MediaCatalogItem
 from gunspec.types.media import MediaCatalogParams as MediaCatalogParams
 from gunspec.types.media import MediaCredit as MediaCredit
+from gunspec.types.media import MediaItemKind as MediaItemKind
 from gunspec.types.media import MediaKind as MediaKind
 from gunspec.types.media import ResolveAlternative as ResolveAlternative
 from gunspec.types.media import ResolveManyResult as ResolveManyResult
@@ -95,6 +97,7 @@ from gunspec.types.models import Favorite as Favorite
 from gunspec.types.models import FavoriteIds as FavoriteIds
 from gunspec.types.models import FavoriteToggle as FavoriteToggle
 from gunspec.types.models import FeatureFrequency as FeatureFrequency
+from gunspec.types.models import FeatureIcon as FeatureIcon
 from gunspec.types.models import FieldCoverage as FieldCoverage
 from gunspec.types.models import FilterOptionCategory as FilterOptionCategory
 from gunspec.types.models import FilterOptionItem as FilterOptionItem
@@ -167,6 +170,10 @@ from gunspec.types.models import ProductionStatusItem as ProductionStatusItem
 from gunspec.types.models import ProjectileKind as ProjectileKind
 from gunspec.types.models import ProlificManufacturer as ProlificManufacturer
 from gunspec.types.models import Provenance as Provenance
+from gunspec.types.models import ProvenanceCheck as ProvenanceCheck
+from gunspec.types.models import ProvenanceChecks as ProvenanceChecks
+from gunspec.types.models import ProvenanceFinding as ProvenanceFinding
+from gunspec.types.models import ProvenanceReview as ProvenanceReview
 from gunspec.types.models import RoleRoster as RoleRoster
 from gunspec.types.models import RoleRosterItem as RoleRosterItem
 from gunspec.types.models import Silhouette as Silhouette
@@ -194,7 +201,11 @@ from gunspec.types.models import TopFirearmItem as TopFirearmItem
 from gunspec.types.models import TrajectoryPoint as TrajectoryPoint
 from gunspec.types.models import UsageStats as UsageStats
 from gunspec.types.models import UsageStatsCurrentMonth as UsageStatsCurrentMonth
+from gunspec.types.models import UsageStatsDaily as UsageStatsDaily
 from gunspec.types.models import UsageStatsDailyEntry as UsageStatsDailyEntry
+from gunspec.types.models import UsageStatsDailyKey as UsageStatsDailyKey
+from gunspec.types.models import UsageStatsEndpointCredit as UsageStatsEndpointCredit
+from gunspec.types.models import UsageStatsEndpointCredits as UsageStatsEndpointCredits
 from gunspec.types.models import UsageStatsMcp as UsageStatsMcp
 from gunspec.types.models import UsageStatsMcpKey as UsageStatsMcpKey
 from gunspec.types.models import UsageStatsPerKeyEntry as UsageStatsPerKeyEntry
@@ -206,6 +217,7 @@ from gunspec.types.models import WebhookTestResult as WebhookTestResult
 from gunspec.types.params import ActionTypesParams as ActionTypesParams
 from gunspec.types.params import AdoptionByCountryParams as AdoptionByCountryParams
 from gunspec.types.params import AdoptionByTypeParams as AdoptionByTypeParams
+from gunspec.types.params import AmmoLoadParams as AmmoLoadParams
 from gunspec.types.params import AmmunitionBallisticsParams as AmmunitionBallisticsParams
 from gunspec.types.params import BalanceReportParams as BalanceReportParams
 from gunspec.types.params import ByActionParams as ByActionParams
@@ -250,9 +262,11 @@ from gunspec.types.params import ListTicketsParams as ListTicketsParams
 from gunspec.types.params import (
     ListWebhookEndpointsParams as ListWebhookEndpointsParams,
 )
+from gunspec.types.params import LoadCarriageParams as LoadCarriageParams
 from gunspec.types.params import LoadFirearmParams as LoadFirearmParams
 from gunspec.types.params import MatchupsParams as MatchupsParams
 from gunspec.types.params import PaginationParams as PaginationParams
+from gunspec.types.params import PointBlankParams as PointBlankParams
 from gunspec.types.params import PopularCalibersParams as PopularCalibersParams
 from gunspec.types.params import PopularFirearmsParams as PopularFirearmsParams
 from gunspec.types.params import PowerRatingParams as PowerRatingParams
@@ -260,6 +274,7 @@ from gunspec.types.params import (
     ProlificManufacturersParams as ProlificManufacturersParams,
 )
 from gunspec.types.params import RandomFirearmParams as RandomFirearmParams
+from gunspec.types.params import RecoilParams as RecoilParams
 from gunspec.types.params import RoleRosterParams as RoleRosterParams
 from gunspec.types.params import SearchFirearmsParams as SearchFirearmsParams
 from gunspec.types.params import SilhouetteParams as SilhouetteParams
@@ -369,6 +384,7 @@ __all__ = [
     "FirearmLoadProfileSourceReported",
     # Models - Categories
     "Category",
+    "FeatureIcon",
     # Models - Images & Users
     "FirearmImage",
     "FirearmUser",
@@ -459,9 +475,13 @@ __all__ = [
     "WebhookTestResult",
     "UsageStats",
     "UsageStatsCurrentMonth",
+    "UsageStatsDaily",
     "UsageStatsDailyEntry",
+    "UsageStatsDailyKey",
     "UsageStatsMcp",
     "UsageStatsMcpKey",
+    "UsageStatsEndpointCredit",
+    "UsageStatsEndpointCredits",
     "UsageStatsProgress",
     "UsageStatsPerKeyEntry",
     "UsageStatsTier",
@@ -486,6 +506,10 @@ __all__ = [
     "TimelineParams",
     "ByConflictParams",
     "CalculateBallisticsParams",
+    "LoadCarriageParams",
+    "RecoilParams",
+    "PointBlankParams",
+    "AmmoLoadParams",
     "LoadFirearmParams",
     "ListManufacturersParams",
     "ListCalibersParams",
@@ -541,6 +565,10 @@ __all__ = [
     "FitSource",
     "SourceKind",
     "SOURCE_KINDS",
+    "ProvenanceCheck",
+    "ProvenanceChecks",
+    "ProvenanceFinding",
+    "ProvenanceReview",
     "SourceCitation",
     "InterfaceFirearm",
     "OfferVendor",

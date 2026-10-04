@@ -81,6 +81,9 @@ from .content import (
     ListChangelogParams as ListChangelogParams,
 )
 from .firearm import (
+    AmmoLoadParams as AmmoLoadParams,
+)
+from .firearm import (
     ByActionParams as ByActionParams,
 )
 from .firearm import (
@@ -111,7 +114,13 @@ from .firearm import (
     ListFirearmsParams as ListFirearmsParams,
 )
 from .firearm import (
+    LoadCarriageParams as LoadCarriageParams,
+)
+from .firearm import (
     LoadFirearmParams as LoadFirearmParams,
+)
+from .firearm import (
+    PointBlankParams as PointBlankParams,
 )
 from .firearm import (
     PopularFirearmsParams as PopularFirearmsParams,
@@ -121,6 +130,9 @@ from .firearm import (
 )
 from .firearm import (
     RandomFirearmParams as RandomFirearmParams,
+)
+from .firearm import (
+    RecoilParams as RecoilParams,
 )
 from .firearm import (
     SearchFirearmsParams as SearchFirearmsParams,
@@ -246,6 +258,10 @@ __all__ = [
     "GameMetaParams",
     "HeadToHeadParams",
     "ListFirearmsParams",
+    "LoadCarriageParams",
+    "RecoilParams",
+    "PointBlankParams",
+    "AmmoLoadParams",
     "LoadFirearmParams",
     "PowerRatingParams",
     "RandomFirearmParams",

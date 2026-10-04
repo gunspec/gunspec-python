@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, Iterator, List, Mapping, Optional
 
 from ..types import (
+    AmmoLoadParams,
     ByActionParams,
     ByConflictParams,
     ByDesignerParams,
@@ -13,9 +14,12 @@ from ..types import (
     GameMetaParams,
     HeadToHeadParams,
     ListFirearmsParams,
+    LoadCarriageParams,
     LoadFirearmParams,
+    PointBlankParams,
     PowerRatingParams,
     RandomFirearmParams,
+    RecoilParams,
     SearchFirearmsParams,
     SilhouetteParams,
     TimelineParams,
@@ -59,6 +63,21 @@ class Firearms(FirearmsExtrasMixin):
 
     def compare(self, params: CompareFirearmsParams) -> APIResponse[Dict[str, Any]]:
         return self._client.get("/v1/firearms/compare", query=params)
+
+    def load_carriage(self, params: LoadCarriageParams) -> APIResponse[Dict[str, Any]]:
+        return self._client.get("/v1/firearms/load-carriage", query=params)
+
+    def recoil(self, params: RecoilParams) -> APIResponse[Dict[str, Any]]:
+        """Free recoil of up to 5 firearms by SAAMI's formula; a lower bound without a powder charge."""
+        return self._client.get("/v1/firearms/recoil", query=params)
+
+    def point_blank(self, params: PointBlankParams) -> APIResponse[Dict[str, Any]]:
+        """Maximum point-blank range and supersonic range of up to 5 firearms."""
+        return self._client.get("/v1/firearms/point-blank", query=params)
+
+    def ammo_load(self, params: AmmoLoadParams) -> APIResponse[Dict[str, Any]]:
+        """Rounds per kilogram, a weight budget and an estimated basic load for up to 5 firearms."""
+        return self._client.get("/v1/firearms/ammo-load", query=params)
 
     def game_meta(self, params: Optional[GameMetaParams] = None) -> APIResponse[List[Dict[str, Any]]]:
         return self._client.get("/v1/firearms/game-meta", query=params)
@@ -179,6 +198,21 @@ class AsyncFirearms(AsyncFirearmsExtrasMixin):
 
     async def compare(self, params: CompareFirearmsParams) -> APIResponse[Dict[str, Any]]:
         return await self._client.get("/v1/firearms/compare", query=params)
+
+    async def load_carriage(self, params: LoadCarriageParams) -> APIResponse[Dict[str, Any]]:
+        return await self._client.get("/v1/firearms/load-carriage", query=params)
+
+    async def recoil(self, params: RecoilParams) -> APIResponse[Dict[str, Any]]:
+        """Free recoil of up to 5 firearms by SAAMI's formula; a lower bound without a powder charge."""
+        return await self._client.get("/v1/firearms/recoil", query=params)
+
+    async def point_blank(self, params: PointBlankParams) -> APIResponse[Dict[str, Any]]:
+        """Maximum point-blank range and supersonic range of up to 5 firearms."""
+        return await self._client.get("/v1/firearms/point-blank", query=params)
+
+    async def ammo_load(self, params: AmmoLoadParams) -> APIResponse[Dict[str, Any]]:
+        """Rounds per kilogram, a weight budget and an estimated basic load for up to 5 firearms."""
+        return await self._client.get("/v1/firearms/ammo-load", query=params)
 
     async def game_meta(self, params: Optional[GameMetaParams] = None) -> APIResponse[List[Dict[str, Any]]]:
         return await self._client.get("/v1/firearms/game-meta", query=params)

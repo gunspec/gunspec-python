@@ -45,3 +45,47 @@ def test_nulls_an_allowance_a_plan_without_a_ceiling_does_not_send() -> None:
 
 def test_nulls_an_unparseable_reset() -> None:
     assert parse_rate_limit(httpx.Headers({"X-Daily-Reset": "tomorrow"})).daily_reset is None
+
+
+def test_reads_the_monthly_allowance_a_keyed_call_carries() -> None:
+    info = parse_rate_limit(
+        httpx.Headers(
+            {
+                "X-Monthly-Limit": "25000",
+                "X-Monthly-Remaining": "22616",
+                "X-Monthly-Reset": "2026-11-01T00:00:00.000Z",
+            }
+        )
+    )
+    assert info.monthly_limit == 25000
+    assert info.monthly_remaining == 22616
+    assert info.monthly_reset is not None
+    assert info.monthly_reset.astimezone(timezone.utc).isoformat() == "2026-11-01T00:00:00+00:00"
+
+
+def test_keeps_the_two_allowances_apart_when_both_are_sent() -> None:
+    info = parse_rate_limit(
+        httpx.Headers(
+            {
+                "X-Daily-Limit": "50",
+                "X-Daily-Remaining": "0",
+                "X-Daily-Reset": "2026-10-03T00:00:00.000Z",
+                "X-Monthly-Limit": "200",
+                "X-Monthly-Remaining": "150",
+                "X-Monthly-Reset": "2026-11-01T00:00:00.000Z",
+            }
+        )
+    )
+    assert info.daily_remaining == 0
+    assert info.monthly_remaining == 150
+    assert info.daily_reset is not None and info.monthly_reset is not None
+    assert info.daily_reset.isoformat() == "2026-10-03T00:00:00+00:00"
+    assert info.monthly_reset.isoformat() == "2026-11-01T00:00:00+00:00"
+
+
+def test_nulls_a_monthly_allowance_a_keyless_call_does_not_carry_and_an_unparseable_reset() -> None:
+    none = parse_rate_limit(httpx.Headers({"X-Daily-Limit": "50", "X-Daily-Remaining": "49"}))
+    assert none.monthly_limit is None
+    assert none.monthly_remaining is None
+    assert none.monthly_reset is None
+    assert parse_rate_limit(httpx.Headers({"X-Monthly-Reset": "next month"})).monthly_reset is None

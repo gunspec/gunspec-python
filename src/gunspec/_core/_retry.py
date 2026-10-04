@@ -30,8 +30,10 @@ class RetryConfig:
     multiplier: float = 2.0
     max_retry_after_s: float = 30.0
     """Longest ``Retry-After`` the SDK will honour. A server asking for a
-    longer wait (a daily cap resetting at midnight, a maintenance window) gets
-    the error raised instead of a sleeping process."""
+    longer wait (a daily cap resetting at midnight, a monthly cap resetting on
+    the 1st, a maintenance window) gets the error raised instead of a sleeping
+    process. A reset inside this window is waited out, so a call refused a
+    second before midnight succeeds after it."""
 
 
 def is_retryable(error: BaseException, method: str) -> bool:
@@ -43,10 +45,15 @@ def is_retryable(error: BaseException, method: str) -> bool:
         return True
 
     if isinstance(error, APIError):
-        # A spent daily allowance is a 429 that no backoff inside one process
-        # will outlast.
-        if isinstance(error, RateLimitError) and error.is_daily_cap:
-            return False
+        # A spent daily or monthly allowance is a 429 that backoff will not
+        # outlast, so it is retried only when the server says the reset is
+        # close: the loop's ``_refuse_long_wait`` raises any wait longer than
+        # ``max_retry_after_s`` instead of sleeping through it, which leaves a
+        # call refused a second before midnight to wait the second and succeed.
+        # Without a ``Retry-After`` there is nothing to say the reset is near,
+        # and a refused call is still counted.
+        if isinstance(error, RateLimitError) and (error.is_daily_cap or error.is_monthly_cap):
+            return error.retry_after is not None
         return error.status in RETRYABLE_STATUS_CODES
 
     return False

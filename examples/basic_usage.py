@@ -43,7 +43,12 @@ def main() -> int:
     except NotFoundError as err:
         out(f"{err}\n  -> {err.action}\n")
     except RateLimitError as err:
-        out(f"slow down: {err.reason}, retry after {err.retry_after}s\n")
+        if err.is_daily_cap:
+            out(f"daily allowance spent: back at {err.daily_reset}\n")
+        elif err.is_monthly_cap:
+            out(f"monthly allowance spent: back at {err.monthly_reset}\n")
+        else:
+            out(f"slow down: {err.reason}, retry after {err.retry_after}s\n")
 
     client.close()
     return 0

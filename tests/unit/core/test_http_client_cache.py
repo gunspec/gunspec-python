@@ -272,7 +272,7 @@ class TestTransportSecurity:
 
 class TestRetryPolicy:
     @respx.mock
-    def test_daily_cap_is_not_retried(self) -> None:
+    def test_daily_cap_is_not_retried_when_its_reset_is_beyond_max_retry_after(self) -> None:
         route = respx.get(f"{BASE}/v1/x").mock(
             return_value=httpx.Response(
                 429,
@@ -280,7 +280,7 @@ class TestRetryPolicy:
                     "success": False,
                     "error": {"code": "DAILY_CAP_EXCEEDED", "reason": "DAILY_CAP_EXCEEDED", "message": "x"},
                 },
-                headers={"Retry-After": "1"},
+                headers={"Retry-After": "600"},
             )
         )
         client = _client(retry=RetryConfig(max_retries=3, initial_delay_s=0.001))

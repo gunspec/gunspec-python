@@ -30,7 +30,19 @@ from .account import (
     UsageStatsCurrentMonth as UsageStatsCurrentMonth,
 )
 from .account import (
+    UsageStatsDaily as UsageStatsDaily,
+)
+from .account import (
     UsageStatsDailyEntry as UsageStatsDailyEntry,
+)
+from .account import (
+    UsageStatsDailyKey as UsageStatsDailyKey,
+)
+from .account import (
+    UsageStatsEndpointCredit as UsageStatsEndpointCredit,
+)
+from .account import (
+    UsageStatsEndpointCredits as UsageStatsEndpointCredits,
 )
 from .account import (
     UsageStatsMcp as UsageStatsMcp,
@@ -154,6 +166,9 @@ from .catalog import (
 )
 from .catalog import (
     CountryArsenalGroup as CountryArsenalGroup,
+)
+from .catalog import (
+    FeatureIcon as FeatureIcon,
 )
 from .catalog import (
     Manufacturer as Manufacturer,
@@ -324,6 +339,18 @@ from .provenance import (
     Provenance as Provenance,
 )
 from .provenance import (
+    ProvenanceCheck as ProvenanceCheck,
+)
+from .provenance import (
+    ProvenanceChecks as ProvenanceChecks,
+)
+from .provenance import (
+    ProvenanceFinding as ProvenanceFinding,
+)
+from .provenance import (
+    ProvenanceReview as ProvenanceReview,
+)
+from .provenance import (
     SourceCitation as SourceCitation,
 )
 from .shared import (
@@ -405,6 +432,7 @@ __all__ = [
     "CaliberBallisticsCaliber",
     "CaliberFamily",
     "Category",
+    "FeatureIcon",
     "Conflict",
     "ConflictFirearm",
     "Country",
@@ -501,6 +529,8 @@ __all__ = [
     "UsageStatsDailyEntry",
     "UsageStatsMcp",
     "UsageStatsMcpKey",
+    "UsageStatsEndpointCredit",
+    "UsageStatsEndpointCredits",
     "UsageStatsProgress",
     "UsageStatsPerKeyEntry",
     "UsageStatsTier",

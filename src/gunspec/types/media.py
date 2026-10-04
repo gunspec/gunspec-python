@@ -10,7 +10,7 @@ from typing import Dict, List, Literal, Optional, TypedDict
 from pydantic import BaseModel, ConfigDict
 from pydantic.alias_generators import to_camel
 
-from .vocabulary import MediaKind, NoticeVariant
+from .vocabulary import MediaItemKind, MediaKind, NoticeVariant
 
 __all__ = [
     "FirearmMedia",
@@ -22,6 +22,7 @@ __all__ = [
     "MediaCatalogItem",
     "MediaCatalogParams",
     "MediaCredit",
+    "MediaItemKind",
     "MediaKind",
     "ResolveAlternative",
     "ResolveResult",
@@ -60,7 +61,9 @@ class FirearmMedia(BaseModel):
     model_config = _MODEL_CONFIG
 
     id: Optional[int] = None
-    kind: MediaKind
+    kind: MediaItemKind
+    #: On a ``feature_icon`` only: the tag in the record's ``features`` it illustrates.
+    feature: Optional[str] = None
     mime_type: Optional[str] = None
     width: Optional[int] = None
     height: Optional[int] = None
@@ -155,7 +158,7 @@ class MediaCatalogParams(TypedDict, total=False):
 class ListFirearmMediaParams(TypedDict, total=False):
     """Parameters for ``GET /v1/firearms/{id}/media``."""
 
-    kind: MediaKind
+    kind: MediaItemKind
 
 
 class GetFirearmMediaParams(TypedDict, total=False):

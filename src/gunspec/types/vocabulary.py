@@ -361,6 +361,25 @@ MEDIA_KINDS: Tuple[MediaKind, ...] = (
     "model",
 )
 
+MediaItemKind = Literal[
+    "silhouette",
+    "render",
+    "photo",
+    "schematic",
+    "model",
+    "feature_icon",
+]
+"""What kind of asset a media listing item is: a stored kind, or `feature_icon`, the drawn icon for one of the firearm's features."""
+
+MEDIA_ITEM_KINDS: Tuple[MediaItemKind, ...] = (
+    "silhouette",
+    "render",
+    "photo",
+    "schematic",
+    "model",
+    "feature_icon",
+)
+
 ImageType = Literal[
     "svg",
     "photo",
@@ -592,6 +611,7 @@ SourceKind = Literal[
     "manufacturer",
     "standards_body",
     "government",
+    "peer_reviewed",
     "reference",
     "aggregator",
     "press",
@@ -605,6 +625,7 @@ SOURCE_KINDS: Tuple[SourceKind, ...] = (
     "manufacturer",
     "standards_body",
     "government",
+    "peer_reviewed",
     "reference",
     "aggregator",
     "press",

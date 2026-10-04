@@ -19,6 +19,7 @@ from .attachments import AttachmentFit as AttachmentFit
 from .attachments import CaliberRating as CaliberRating
 from .attachments import FirearmAttachments as FirearmAttachments
 from .attachments import FirearmAttachmentsGroup as FirearmAttachmentsGroup
+from .attachments import FitRoute as FitRoute
 from .attachments import FitVia as FitVia
 from .attachments import InterfaceFirearm as InterfaceFirearm
 from .attachments import StandardRef as StandardRef
@@ -42,6 +43,7 @@ __all__ = [
     "AttachmentDetail",
     "AttachmentFirearmFit",
     "AttachmentFit",
+    "FitRoute",
     "AttachmentManufacturer",
     "AttachmentStatus",
     "CaliberRating",

@@ -33,6 +33,27 @@ class TestFirearms:
         resource.compare(params)
         mock_sync_client.get.assert_called_once_with("/v1/firearms/compare", query=params)
 
+    def test_load_carriage(self, mock_sync_client):
+        resource = Firearms(mock_sync_client)
+        params = {"ids": "hk416,fn-scar-l", "magazines": 7, "kit_kg": 25, "terrain": "light_brush"}
+        resource.load_carriage(params)
+        mock_sync_client.get.assert_called_once_with("/v1/firearms/load-carriage", query=params)
+
+    def test_analyses(self, mock_sync_client):
+        resource = Firearms(mock_sync_client)
+        for method, path, params in (
+            (
+                resource.recoil,
+                "/v1/firearms/recoil",
+                {"ids": "hk416", "ammo_id": "m855", "powder_charge_g": 1.6},
+            ),
+            (resource.point_blank, "/v1/firearms/point-blank", {"ids": "hk416,fn-scar-h", "target_mm": 200}),
+            (resource.ammo_load, "/v1/firearms/ammo-load", {"ids": "hk416,ak-74", "budget_kg": 5}),
+        ):
+            mock_sync_client.get.reset_mock()
+            method(params)
+            mock_sync_client.get.assert_called_once_with(path, query=params)
+
     def test_game_meta(self, mock_sync_client):
         resource = Firearms(mock_sync_client)
         params = {"category": "pistol"}
@@ -222,6 +243,27 @@ class TestAsyncFirearms:
         params = {"ids": "glock-g17,sig-p320"}
         await resource.compare(params)
         mock_async_client.get.assert_called_once_with("/v1/firearms/compare", query=params)
+
+    async def test_load_carriage(self, mock_async_client):
+        resource = AsyncFirearms(mock_async_client)
+        params = {"ids": "hk416,fn-scar-l", "magazines": 7, "kit_kg": 25, "terrain": "light_brush"}
+        await resource.load_carriage(params)
+        mock_async_client.get.assert_called_once_with("/v1/firearms/load-carriage", query=params)
+
+    async def test_analyses(self, mock_async_client):
+        resource = AsyncFirearms(mock_async_client)
+        for method, path, params in (
+            (
+                resource.recoil,
+                "/v1/firearms/recoil",
+                {"ids": "hk416", "ammo_id": "m855", "powder_charge_g": 1.6},
+            ),
+            (resource.point_blank, "/v1/firearms/point-blank", {"ids": "hk416,fn-scar-h", "target_mm": 200}),
+            (resource.ammo_load, "/v1/firearms/ammo-load", {"ids": "hk416,ak-74", "budget_kg": 5}),
+        ):
+            mock_async_client.get.reset_mock()
+            await method(params)
+            mock_async_client.get.assert_called_once_with(path, query=params)
 
     async def test_game_meta(self, mock_async_client):
         resource = AsyncFirearms(mock_async_client)

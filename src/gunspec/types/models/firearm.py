@@ -120,6 +120,10 @@ class Firearm(BaseModel):
 
     # Data quality
     data_confidence: Optional[float] = None
+    #: When a source was last read against the record's figures; None until one has been.
+    verified_at: Optional[str] = None
+    #: The figures a source confirmed, read off the maker's own page and accepted by a person.
+    verified_fields: Optional[List[str]] = None
 
     # Timestamps and cache signals
     created_at: str

@@ -91,6 +91,25 @@ class FitVia(BaseModel):
     adapter_id: Optional[str] = None
 
 
+class FitRoute(BaseModel):
+    """One way an attachment goes on: directly, or through one adapter.
+
+    Routes are ordered best first; the top-level fields of the fit are the first route.
+    """
+
+    model_config = _MODEL_CONFIG
+
+    fit_type: Optional[FitType] = None
+    adapter: Optional[AttachmentManufacturer] = None
+    via: List[FitVia] = []
+    confidence: Optional[float] = None
+    source: Optional[FitSource] = None
+    #: How well the adapter's own record is sourced, 0 to 1, when the route goes through one.
+    adapter_confidence: Optional[float] = None
+    #: What a person fitting it should know that does not stop it fitting.
+    caveats: List[str] = []
+
+
 class AttachmentFit(Attachment):
     """An attachment with its fit verdict against one firearm."""
 
@@ -105,6 +124,11 @@ class AttachmentFit(Attachment):
     confidence: float = 0.0
     reason: str = ""
     blocked_by: Optional[str] = None
+    #: Every way it goes on, best first.
+    #: Empty for a curated override, a universal fit and a row that does not fit.
+    routes: List[FitRoute] = []
+    #: The best route's caveats.
+    caveats: List[str] = []
 
 
 class FirearmAttachmentsGroup(BaseModel):

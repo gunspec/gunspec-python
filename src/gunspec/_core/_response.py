@@ -40,11 +40,24 @@ class RateLimitInfo:
     daily_limit: Optional[int] = None
     """Requests the plan allows per day, or ``None`` on a plan with no ceiling."""
     daily_remaining: Optional[int] = None
-    """Requests left today. A figure to pace against: it is served from a short
-    cache until you are near the cap, then read live. Reconcile against
-    ``GET /v1/me/usage``."""
+    """Requests left today after this one, never below zero: the response to the
+    last request that will be served reports ``0``, and the next is refused. A
+    figure to pace against: it is served from a short cache until you are near
+    the cap, then read live. Reconcile against ``GET /v1/me/usage``."""
     daily_reset: Optional[datetime] = None
     """When the daily counter rolls over (UTC midnight), or ``None``."""
+    monthly_limit: Optional[int] = None
+    """Requests the plan allows per UTC month, for the whole account (every key
+    draws on one pool). ``None`` on a call made without a key, which has the
+    daily limit only."""
+    monthly_remaining: Optional[int] = None
+    """Requests left this month after this one, never below zero. Only calls
+    that were served spend it: a call a limit refused, and a ``304``, do not.
+    The last request that will be served reports ``0``, and the next is refused
+    with ``MONTHLY_CAP_EXCEEDED`` until :attr:`monthly_reset`."""
+    monthly_reset: Optional[datetime] = None
+    """When the monthly allowance returns to zero (midnight UTC on the 1st), or
+    ``None``."""
 
 
 @dataclass
@@ -121,7 +134,7 @@ class RawResponse:
 
 
 def parse_rate_limit(headers: httpx.Headers) -> RateLimitInfo:
-    """Parse the allowance headers: ``X-Daily-*``, and ``X-RateLimit-*`` if present."""
+    """Parse the allowance headers: ``X-Daily-*``, ``X-Monthly-*``, and ``X-RateLimit-*`` if present."""
 
     def _int_or_none(name: str) -> Optional[int]:
         raw = headers.get(name)
@@ -132,8 +145,8 @@ def parse_rate_limit(headers: httpx.Headers) -> RateLimitInfo:
         except (ValueError, TypeError):
             return None
 
-    def _reset() -> Optional[datetime]:
-        raw = headers.get("X-Daily-Reset")
+    def _date(name: str) -> Optional[datetime]:
+        raw = headers.get(name)
         if raw is None:
             return None
         try:
@@ -149,7 +162,10 @@ def parse_rate_limit(headers: httpx.Headers) -> RateLimitInfo:
         reset=_int_or_none("X-RateLimit-Reset"),
         daily_limit=_int_or_none("X-Daily-Limit"),
         daily_remaining=_int_or_none("X-Daily-Remaining"),
-        daily_reset=_reset(),
+        daily_reset=_date("X-Daily-Reset"),
+        monthly_limit=_int_or_none("X-Monthly-Limit"),
+        monthly_remaining=_int_or_none("X-Monthly-Remaining"),
+        monthly_reset=_date("X-Monthly-Reset"),
     )
 
 
