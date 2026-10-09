@@ -698,6 +698,30 @@ OFFER_STATUSES: Tuple[OfferStatus, ...] = (
     "published",
 )
 
+ReleaseStatus = Literal[
+    "announced",
+    "catalogued",
+]
+"""Where a new model stands: `announced` when a source a reader can cite names it and the catalog has no record yet, `catalogued` once it does."""
+
+RELEASE_PUBLIC_STATUSES: Tuple[ReleaseStatus, ...] = (
+    "announced",
+    "catalogued",
+)
+
+ReleaseDatePrecision = Literal[
+    "year",
+    "month",
+    "day",
+]
+"""How much of `releasedAt` a source stated: only the year, the month, or the day."""
+
+RELEASE_DATE_PRECISIONS: Tuple[ReleaseDatePrecision, ...] = (
+    "year",
+    "month",
+    "day",
+)
+
 OfferTargetKind = Literal[
     "attachment",
     "firearm",

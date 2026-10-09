@@ -2,6 +2,13 @@
 
 All notable changes to the `gunspec` Python package. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the package follows [Semantic Versioning](https://semver.org/).
 
+## 0.9.0 (2026-10-09)
+
+
+### Added
+
+* a release ledger and GET /v1/releases for new firearm models (71b1120)
+
 ## 0.8.1 (2026-10-04)
 
 
